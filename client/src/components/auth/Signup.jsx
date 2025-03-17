@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,20 +26,21 @@ import {
   RadioGroupItem,
 } from '@/components/ui/radio-group';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import useSignup from '@/hooks/useSignup';
 
 // Form validation schema
 const signupSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
+  name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
   email: z.string().email({ message: 'Please enter a valid email address' }),
+  phone: z.string().min(11,{ message: 'Phone number must be 11 number' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
   role: z.enum(['jobseeker', 'recruiter'], { 
     required_error: 'Please select a role'
   }),
 });
 
-const Signup = ({ onSignup }) => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+const Signup = () => {
+  const{signup, isError, isLoading}=useSignup()
   const [showPassword, setShowPassword] = useState(false);
   
   // Initialize the form
@@ -48,6 +49,7 @@ const Signup = ({ onSignup }) => {
     defaultValues: {
       name: '',
       email: '',
+      phone:'',
       password: '',
       role: 'jobseeker',
     },
@@ -55,31 +57,8 @@ const Signup = ({ onSignup }) => {
 
   // Form submission handler
   const handleSubmit = async (data) => {
-    setIsLoading(true);
-    try {
-      // Here you would typically call your API to register the user
-      console.log('Signup data:', data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Call the onSignup callback with the user data
-      if (onSignup) {
-        onSignup({
-          name: data.name,
-          email: data.email,
-          role: data.role,
-        });
-      }
-      
-      // Redirect to dashboard or login
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Signup failed:', error);
-      // You could set an error state here and display it to the user
-    } finally {
-      setIsLoading(false);
-    }
+    const{name,email,password,phone,role}=data;
+    await signup(name,email,password,phone,role);
   };
 
   return (
@@ -122,6 +101,24 @@ const Signup = ({ onSignup }) => {
                       <Input 
                         type="email" 
                         placeholder="john.doe@example.com" 
+                        {...field} 
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="text" 
+                        placeholder="e.g. +880123548585" 
                         {...field} 
                         disabled={isLoading}
                       />
@@ -211,6 +208,9 @@ const Signup = ({ onSignup }) => {
             </form>
           </Form>
         </CardContent>
+        {
+          isError && <div>{isError}</div>
+        }
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}

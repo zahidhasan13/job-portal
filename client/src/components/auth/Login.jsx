@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,7 +26,7 @@ import {
   RadioGroupItem,
 } from '@/components/ui/radio-group';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import useLogin from '@/hooks/useLogin';
 
 // Form validation schema
 const signinSchema = z.object({
@@ -37,11 +37,9 @@ const signinSchema = z.object({
   }),
 });
 
-const Login = ({ onSignIn }) => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+const Login = () => {
+  const{login, isError, isLoading}=useLogin()
   const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState(null);
   
   // Initialize the form
   const form = useForm({
@@ -55,38 +53,8 @@ const Login = ({ onSignIn }) => {
 
   // Form submission handler
   const handleSubmit = async (data) => {
-    setIsLoading(true);
-    setAuthError(null);
-    
-    try {
-      // Here you would typically call your API to authenticate the user
-      console.log('Sign in data:', data);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Call the onSignIn callback with the user data
-      if (onSignIn) {
-        onSignIn({
-          email: data.email,
-          role: data.role,
-          // Add other user data that would come from your backend
-          name: 'John Doe', // This would come from your API response
-        });
-      }
-      
-      // Redirect to dashboard based on role
-      if (data.role === 'jobseeker') {
-        navigate('/jobseeker/dashboard');
-      } else {
-        navigate('/recruiter/dashboard');
-      }
-    } catch (error) {
-      console.error('Sign in failed:', error);
-      setAuthError('Invalid email or password. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    const{email,password,role}=data;
+    await login(email,password,role);
   };
 
   return (
@@ -99,12 +67,6 @@ const Login = ({ onSignIn }) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {authError && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{authError}</AlertDescription>
-            </Alert>
-          )}
-          
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
               <FormField
@@ -211,6 +173,9 @@ const Login = ({ onSignIn }) => {
             </form>
           </Form>
         </CardContent>
+        {
+          isError && <div>{isError}</div>
+        }
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-gray-600 text-center">
             Don't have an account?{" "}

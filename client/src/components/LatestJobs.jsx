@@ -88,16 +88,7 @@ const LatestJobs = () => {
         "salary": 120000
       },
   ];
-  if (!jobs || jobs.length === 0) {
-    return (
-      <div className="p-8 text-center bg-gray-50">
-        <h3 className="text-lg font-medium text-gray-900">No jobs found</h3>
-        <p className="text-gray-500 mt-2">
-          Try adjusting your search filters or check back later.
-        </p>
-      </div>
-    );
-  }
+  
 
   return (
     <div className="bg-gray-50">

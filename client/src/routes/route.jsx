@@ -2,6 +2,7 @@ import App from "@/App";
 import Login from "@/components/auth/Login";
 import Signup from "@/components/auth/Signup";
 import About from "@/pages/About";
+import Browse from "@/pages/Browse";
 import Home from "@/pages/Home";
 import Jobs from "@/pages/Jobs";
 import NotFound from "@/pages/NotFound";
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
         },
         {
           path:"/browse",
-          element: <Home/>
+          element: <Browse/>
         },
         {
           path:"/about",

@@ -14,8 +14,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
-const Header = ({ isLoggedIn, user, onLogout }) => {
+const Header = ({ isLoggedIn=false, user, onLogout }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -30,20 +31,7 @@ const Header = ({ isLoggedIn, user, onLogout }) => {
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <svg
-              className="h-8 w-8 text-blue-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            <span className="ml-2 text-xl font-bold text-gray-900">JobPortal</span>
+            <span className="ml-2 text-2xl font-bold text-sky-500">Job<span className='text-black'>Portal</span></span>
           </Link>
         </div>
 
@@ -68,25 +56,11 @@ const Header = ({ isLoggedIn, user, onLogout }) => {
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
-              variant="ghost"
-              size="sm"
+            variant="ghost"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-500"
+              className="text-gray-500 -mr-4"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              <Menu className="h-6 w-6" />
             </Button>
           </div>
 
@@ -96,8 +70,8 @@ const Header = ({ isLoggedIn, user, onLogout }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.avatarUrl} alt={user.name} />
-                    <AvatarFallback>{user.name?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="Avater" />
+                    {/* <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback> */}
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -105,8 +79,8 @@ const Header = ({ isLoggedIn, user, onLogout }) => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex flex-col items-start">
-                  <span className="font-medium">{user.name}</span>
-                  <span className="text-sm text-gray-500 truncate max-w-full">{user.bio}</span>
+                  <span className="font-medium">{user?.name}</span>
+                  <span className="text-sm text-gray-500 truncate max-w-full">{user?.bio}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
@@ -125,9 +99,16 @@ const Header = ({ isLoggedIn, user, onLogout }) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button onClick={() => navigate('/login')} variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700">
+            <div className='flex items-center gap-2'>
+                <Button className="px-5 bg-black text-white">
               Login
             </Button>
+            <Link to="/signup">
+            <Button className="px-5 bg-black text-white">
+              Signup
+            </Button>
+            </Link>
+            </div>
           )}
         </div>
       </div>

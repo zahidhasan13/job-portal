@@ -100,9 +100,9 @@ const Header = ({ isLoggedIn=false, user, onLogout }) => {
             </DropdownMenu>
           ) : (
             <div className='flex items-center gap-2'>
-                <Button className="px-5 bg-black text-white">
+                <Link to="/login"><Button className="px-5 bg-black text-white">
               Login
-            </Button>
+            </Button></Link>
             <Link to="/signup">
             <Button className="px-5 bg-black text-white">
               Signup

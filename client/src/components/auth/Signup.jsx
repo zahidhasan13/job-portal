@@ -209,7 +209,9 @@ const Signup = () => {
           </Form>
         </CardContent>
         {
-          isError && <div>{isError}</div>
+          isError && <p className="bg-rose-500/30 rounded-lg p-5 text-rose-500 border border-rose-500 mx-5">
+          {isError}
+        </p>
         }
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">

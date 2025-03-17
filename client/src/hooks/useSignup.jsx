@@ -19,15 +19,15 @@ const useSignup = () => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log(res);
             if(res.status === 200){
                 setIsLoading(false);
                 toast.success("User Signup Successfullly!");
                 navigate('/login');
             }
         } catch (error) {
+            console.log(error);
             setIsLoading(false);
-            setIsError(error.response?.data?.message || 'An error occurred during signup');
+            setIsError(error.response?.data?.error || 'An error occurred during signup');
         }
     };
 

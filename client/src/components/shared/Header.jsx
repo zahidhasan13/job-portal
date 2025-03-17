@@ -26,7 +26,7 @@ const Header = ({ isLoggedIn=false, user, onLogout }) => {
   };
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header className="w-full bg-white/50 backdrop-blur-xl border-b border-blue-600 sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -39,14 +39,14 @@ const Header = ({ isLoggedIn=false, user, onLogout }) => {
         <div className="flex items-center space-x-6">
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">
+              Home
+            </Link>
             <Link to="/jobs" className="text-gray-600 hover:text-blue-600 font-medium">
               Jobs
             </Link>
-            <Link to="/companies" className="text-gray-600 hover:text-blue-600 font-medium">
-              Companies
-            </Link>
-            <Link to="/resources" className="text-gray-600 hover:text-blue-600 font-medium">
-              Resources
+            <Link to="/browse" className="text-gray-600 hover:text-blue-600 font-medium">
+              Browse
             </Link>
             <Link to="/about" className="text-gray-600 hover:text-blue-600 font-medium">
               About

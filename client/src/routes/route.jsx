@@ -1,7 +1,10 @@
 import App from "@/App";
 import Login from "@/components/auth/Login";
 import Signup from "@/components/auth/Signup";
+import About from "@/pages/About";
 import Home from "@/pages/Home";
+import Jobs from "@/pages/Jobs";
+import NotFound from "@/pages/NotFound";
 import { createBrowserRouter } from "react-router-dom";
 
 
@@ -14,7 +17,19 @@ const router = createBrowserRouter([
         {
           path:"/",
           element: <Home/>
-        }
+        },
+        {
+          path:"/jobs",
+          element: <Jobs/>
+        },
+        {
+          path:"/browse",
+          element: <Home/>
+        },
+        {
+          path:"/about",
+          element: <About/>
+        },
       ]
     },
     {
@@ -24,6 +39,10 @@ const router = createBrowserRouter([
     {
       path: '/login',
       element: <Login/>
+    },
+    {
+      path: '*',
+      element: <NotFound/>
     }
   ]);
 

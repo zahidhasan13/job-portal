@@ -8,6 +8,7 @@ try {
     }
 
     const decode = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    
     if(!decode){
         throw new Error("Invalid Token")
     }

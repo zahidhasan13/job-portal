@@ -1,5 +1,6 @@
 import HeroSection from '@/components/HeroSection';
 import JobCategorySection from '@/components/JobCategorySection';
+import LatestJobs from '@/components/LatestJobs';
 import React from 'react';
 
 const Home = () => {
@@ -7,6 +8,7 @@ const Home = () => {
         <>
             <HeroSection/>
             <JobCategorySection/>
+            <LatestJobs/>
         </>
     );
 };

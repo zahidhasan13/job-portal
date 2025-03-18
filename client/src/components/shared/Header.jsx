@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Avatar,
   AvatarFallback,
@@ -15,14 +15,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
-const Header = ({ isLoggedIn=false, user, onLogout }) => {
-  const navigate = useNavigate();
+const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const {user} = useSelector(state=>state.auth)
 
   const handleLogout = () => {
-    onLogout();
-    navigate('/login');
+    
+    console.log("logout");
   };
 
   return (
@@ -65,7 +66,7 @@ const Header = ({ isLoggedIn=false, user, onLogout }) => {
           </div>
 
           {/* User Avatar or Login Button */}
-          {isLoggedIn ? (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">

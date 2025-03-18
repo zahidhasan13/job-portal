@@ -1,5 +1,7 @@
+import { setUser } from "@/redux/slices/authSlice";
 import axios from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -7,6 +9,7 @@ const useLogin = () => {
   const [isError, setIsError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const login = async (email, password, role) => {
     const data = { email, password, role };
@@ -21,17 +24,21 @@ const useLogin = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
-      if(res.status === 200){
+
+      console.log(res);
+      if (res.status === 200) {
         setIsLoading(false);
+        dispatch(setUser(res.data));
         toast.success("User Signup Successfullly!");
-        navigate('/');
-    }
+        navigate("/");
+      }
     } catch (error) {
       setIsLoading(false);
       setIsError(
-        error.response?.data?.message || "An error occurred during login"
+        error.response?.data?.error || "An error occurred during login"
       );
     }
   };

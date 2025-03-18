@@ -64,12 +64,9 @@ const logOut = async (req, res) => {
 // update Profile
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, phone, bio, skills, description } = req.body;
+    const { name, email, phone, bio, skills, description,address } = req.body;
 
-    let skillsArray;
-    if (skills) {
-      skillsArray = skills.split(",");
-    }
+    const skillsArray = skills ? skills?.split(",") : [];
 
     const userId = req.id;
     let user = await User.findById(userId);
@@ -84,6 +81,7 @@ const updateProfile = async (req, res) => {
     if (bio) user.profile.bio = bio;
     if (skills) user.profile.skills = skillsArray;
     if (description) user.profile.description = description;
+    if (address) user.profile.address = address;
 
     await user.save();
     user = {

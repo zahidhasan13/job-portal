@@ -4,8 +4,10 @@ import Signup from "@/components/auth/Signup";
 import About from "@/pages/About";
 import Browse from "@/pages/Browse";
 import Home from "@/pages/Home";
+import JobDetails from "@/pages/JobDetails";
 import Jobs from "@/pages/Jobs";
 import NotFound from "@/pages/NotFound";
+import Profile from "@/pages/Profile";
 import { createBrowserRouter } from "react-router-dom";
 
 
@@ -24,12 +26,20 @@ const router = createBrowserRouter([
           element: <Jobs/>
         },
         {
+          path:"/job-details",
+          element: <JobDetails/>
+        },
+        {
           path:"/browse",
           element: <Browse/>
         },
         {
           path:"/about",
           element: <About/>
+        },
+        {
+          path:"/profile",
+          element: <Profile/>
         },
       ]
     },

@@ -1,101 +1,16 @@
 import AllJobs from '@/components/AllJobs';
 import JobFilter from '@/components/JobFilter';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Jobs = () => {
+  const { jobs } = useSelector((state) => state.job);
   const [filters, setFilters] = useState({
     location: '',
     jobType: '',
     experienceLevel: '',
   });
 
-  // Dummy jobs data
-  const jobs = [
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-    {
-        "id": "64f8e4b5e4b0d1a2b3c4d5e6",
-        "title": "Senior Software Engineer",
-        "companyName": "Tech Corp",
-        "companyLogo": "https://example.com/logo.png", // URL to the company logo
-        "jobType": "Full-time",
-        "location": "San Francisco, CA",
-        "postingDate": "2023-10-01",
-        "description": "We are looking for a talented Senior Software Engineer to join our team and help build scalable, high-performance applications. The ideal candidate has 5+ years of experience in software development and a strong understanding of modern web technologies.",
-        "tags": ["JavaScript", "React", "Node.js", "AWS"],
-        "salary": 120000
-      },
-  ];
 
   // Filter jobs based on filters
   const filteredJobs = jobs.filter((job) => {

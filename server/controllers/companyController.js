@@ -59,6 +59,12 @@ const updateCompany = async (req, res) => {
       companySize,
       foundedYear,
       website,
+      address,
+      city,
+      state,
+      country,
+      zipCode,
+      isHeadquarters,
       contactEmail,
       contactPhone,
     } = req.body;
@@ -71,6 +77,14 @@ const updateCompany = async (req, res) => {
       companySize,
       foundedYear,
       website,
+      locations:{
+        address,
+        city,
+        state,
+        country,
+        zipCode,
+        isHeadquarters,
+      },
       contactEmail,
       contactPhone,
     };

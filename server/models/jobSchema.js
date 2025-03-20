@@ -75,10 +75,6 @@ const jobSchema = new Schema(
       ref: "User",
       required: true,
     },
-    postedDate: {
-      type: Date,
-      default: Date.now,
-    },
     applicationCount: {
       type: Number,
       default: 0,

@@ -38,44 +38,55 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
       skills: user?.profile?.skills || "",
       description: user?.profile?.description || "",
       address: user?.profile?.address || "",
-      resume: null,
+      profilePhoto: null, // Use a unique name for profile photo
+      resume: null, // Use a unique name for resume
     },
   });
 
   const onSubmit = async (data) => {
     try {
-    //   const formData = new FormData();
-    //   Object.keys(data).forEach((key) => {
-    //     if (key === "resume" && data.resume) {
-    //       formData.append("resume", data.resume);
-    //     } else {
-    //       formData.append(key, data[key]);
-    //     }
-    //   });
+      const formData = new FormData();
+
+      // Append all fields to formData
+      Object.keys(data).forEach((key) => {
+        if (key === "profilePhoto" || key === "resume") {
+          if (data[key]) {
+            formData.append(key, data[key]);
+          }
+        } else {
+          formData.append(key, data[key]);
+        }
+      });
 
       const response = await axios.post(
         "http://localhost:8400/api/user/profile/update",
-        data,
+        formData,
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
 
-      if(response.status === 200){
+      if (response.status === 200) {
         dispatch(setUser(response.data.user)); // Update Redux state
-      setIsOpen(false); // Close the dialog
-      toast.success("Updated Successfullly!");
+        setIsOpen(false); // Close the dialog
+        toast.success("Updated Successfully!");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      toast.error("Failed to update profile. Please try again.");
     }
   };
 
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     form.setValue("resume", file);
-//   };
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    form.setValue("profilePhoto", file);
+  };
+
+  const handleResumeChange = (e) => {
+    const file = e.target.files[0];
+    form.setValue("resume", file);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -112,6 +123,23 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Enter your email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profilePhoto"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Profile Photo</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          onChange={handleProfilePhotoChange}
+                          accept=".jpg,.png,.jpeg"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -194,7 +222,7 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
                     </FormItem>
                   )}
                 />
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="resume"
                   render={() => (
@@ -203,14 +231,14 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
                       <FormControl>
                         <Input
                           type="file"
-                          onChange={handleFileChange}
-                          accept=".pdf,.doc,.docx"
+                          onChange={handleResumeChange}
+                          accept=".pdf, .doc, .docx"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
-                /> */}
+                />
               </div>
             </div>
             <Button type="submit" className="w-full bg-black">

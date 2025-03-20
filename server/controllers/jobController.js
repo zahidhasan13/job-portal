@@ -87,7 +87,10 @@ const getAllJobs = async (req, res) => {
 const getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await Job.findById(jobId);
+    const job = await Job.findById(jobId).populate({
+      path: "applications",
+      model: "Application"
+    });
     if (!job) {
       throw new Error("Job not Found!");
     }
@@ -98,11 +101,10 @@ const getJobById = async (req, res) => {
 };
 // get admin posted jobs
 const getAdminJobs = async (req, res) => {
-    
   try {
     const adminId = req.id;
     if (!adminId) {
-      throw new Error("Id invalid")
+      throw new Error("Id invalid");
     }
     const jobs = await Job.find({ postedBy: adminId });
     if (!jobs) {

@@ -26,7 +26,7 @@ const JobCard = ({ job, isSaved, onSave }) => {
             </div>
             <div>
               <h3 className="font-medium text-lg text-gray-900 line-clamp-1">{job.title}</h3>
-              <p className="text-sm text-gray-500">{job.companyName}</p>
+              <p className="text-sm text-gray-500">{job.company.name}</p>
             </div>
           </div>
           <Badge variant={job.jobType === 'Full-time' ? 'default' : 'outline'} className="ml-2">
@@ -63,7 +63,7 @@ const JobCard = ({ job, isSaved, onSave }) => {
         </div>
         
         <div className="mt-6 flex items-center justify-between">
-          <p className="font-medium text-blue-600">${job.salary}</p>
+          <p className="font-medium text-blue-600">${job.salary.min} - {job.salary.max}</p>
           <div className="flex items-center gap-2">
             <Button 
               variant="ghost" 
@@ -74,7 +74,7 @@ const JobCard = ({ job, isSaved, onSave }) => {
               <Bookmark className={`h-4 w-4 ${isSaved ? 'text-blue-600 fill-blue-600' : 'text-gray-400'}`} />
               {isSaved ? 'Saved' : 'Save'}
             </Button>
-            <Link to={`/jobs/${job.id}`}>
+            <Link to={`/job-details/${job._id}`}>
               <Button className="bg-black">View Details</Button>
             </Link>
           </div>

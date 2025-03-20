@@ -27,7 +27,7 @@ const companySchema = new Schema({
     min: 1800,
     max: new Date().getFullYear()
   },
-  locations: [{
+  locations: {
     address: {
       type: String,
       trim: true
@@ -52,7 +52,7 @@ const companySchema = new Schema({
       type: Boolean,
       default: false
     }
-  }],
+  },
   website: {
     type: String,
     trim: true,

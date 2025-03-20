@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Avatar,
   AvatarFallback,
@@ -14,16 +14,32 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { LogOut, Menu } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { setLogOut } from '@/redux/slices/authSlice';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {user} = useSelector(state=>state.auth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     
-    console.log("logout");
+    try {
+      const res = await axios.get("http://localhost:8400/api/user/logout",{withCredentials: true})
+      console.log(res);
+      if(res.status === 200){
+        dispatch(setLogOut(null))
+        navigate("/");
+        toast.success("Logout Successfull!")
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.error)
+    }
   };
 
   return (
@@ -71,7 +87,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="Avater" />
+                    <AvatarImage src={user.profile.profilePhoto} alt="ProfilePhoto"/>
                     {/* <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback> */}
                   </Avatar>
                 </Button>

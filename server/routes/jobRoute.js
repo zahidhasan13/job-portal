@@ -5,8 +5,8 @@ const { jobPost, getJobById, getAllJobs, getAdminJobs } = require("../controller
 const router = express.Router();
 
 router.post("/",isAuthorized,jobPost)
-router.get("/",isAuthorized,getAllJobs)
+router.get("/",getAllJobs)
 router.get("/adminJobs",isAuthorized,getAdminJobs)
-router.get("/:id",isAuthorized,getJobById)
+router.get("/:id",getJobById)
 
 module.exports = router;

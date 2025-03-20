@@ -28,7 +28,6 @@ const useLogin = () => {
         }
       );
 
-      console.log(res);
       if (res.status === 200) {
         setIsLoading(false);
         dispatch(setUser(res.data));

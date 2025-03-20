@@ -8,6 +8,8 @@ import JobDetails from "@/pages/JobDetails";
 import Jobs from "@/pages/Jobs";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
+import RecruiterCompanies from "@/pages/RecruiterCompanies";
+import RecruiterJobs from "@/pages/RecruiterJobs";
 import { createBrowserRouter } from "react-router-dom";
 
 
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
         {
           path:"/browse",
           element: <Browse/>
+        },
+        {
+          path:"/recruiter/companies",
+          element: <RecruiterCompanies/>
+        },
+        {
+          path:"/recruiter/jobs",
+          element: <RecruiterJobs/>
         },
         {
           path:"/about",

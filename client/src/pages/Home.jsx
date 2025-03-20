@@ -1,11 +1,18 @@
 import HeroSection from '@/components/HeroSection';
 import JobCategorySection from '@/components/JobCategorySection';
 import LatestJobs from '@/components/LatestJobs';
-import useGetAllJobs from '@/hooks/useGetAllJobs';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    useGetAllJobs()
+    const {user} = useSelector(state=>state.auth);
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(user && !user.role === 'jobseeker'){
+            navigate('/recruiter/companies');
+        }
+    },[navigate, user]);
     return (
         <>
             <HeroSection/>

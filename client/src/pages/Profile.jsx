@@ -7,38 +7,24 @@ import UserInfoTab from '@/components/UserInfoTab';
 import AppliedJobsTable from '@/components/AppliedJobsTable';
 import SavedJobsTable from '@/components/SavedJobsTable';
 import UpdateProfileDialog from '@/components/UpdateProfileDialog';
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('user-info');
   const [isOpen, setIsOpen] = useState(false);
+  const {user} = useSelector(state => state.auth);
 
-  // Dummy user data
-  const user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    location: 'San Francisco, CA',
-    bio: 'Experienced software engineer with a passion for building scalable applications.',
-  };
+ 
 
-  // Dummy applied jobs data
-  const appliedJobs = [
-    { id: 1, title: 'Software Engineer', company: 'Tech Corp', location: 'San Francisco, CA', status: 'Applied' },
-    { id: 2, title: 'Product Manager', company: 'Innovate Inc', location: 'New York, NY', status: 'Interviewing' },
-    { id: 3, title: 'Data Scientist', company: 'DataWorks', location: 'Remote', status: 'Rejected' },
-  ];
+  
 
-  // Dummy saved jobs data
-  const savedJobs = [
-    { id: 1, title: 'Frontend Developer', company: 'Web Solutions', location: 'Remote' },
-    { id: 2, title: 'Backend Developer', company: 'API Masters', location: 'Boston, MA' },
-  ];
-
-
+  
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       {/* Tabs */}
       <Tabs defaultValue="user-info" className="w-full">
-        <TabsList className="grid grid-cols-3 w-full max-w-2xl">
+        {
+          (user && user?.role === 'jobseeker') && <TabsList className="grid grid-cols-3 w-full max-w-2xl">
           <TabsTrigger value="user-info" onClick={() => setActiveTab('user-info')}>
             <User className="w-4 h-4 mr-2" />
             User Info
@@ -52,6 +38,7 @@ const Profile = () => {
             Saved Jobs
           </TabsTrigger>
         </TabsList>
+        }
 
         {/* User Info Tab */}
         <TabsContent value="user-info" className="mt-6">
@@ -60,12 +47,12 @@ const Profile = () => {
 
         {/* Applied Jobs Tab */}
         <TabsContent value="applied-jobs" className="mt-6">
-        <AppliedJobsTable appliedJobs={appliedJobs}/>
+        <AppliedJobsTable/>
         </TabsContent>
 
         {/* Saved Jobs Tab */}
         <TabsContent value="saved-jobs" className="mt-6">
-          <SavedJobsTable savedJobs={savedJobs}/>
+          <SavedJobsTable/>
         </TabsContent>
 
       </Tabs>

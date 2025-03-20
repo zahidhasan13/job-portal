@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,33 +8,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { LogOut, Menu } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { toast } from 'sonner';
-import { setLogOut } from '@/redux/slices/authSlice';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { LogOut, Menu } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "sonner";
+import { setLogOut } from "@/redux/slices/authSlice";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {user} = useSelector(state=>state.auth)
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = async() => {
-    
+  const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:8400/api/user/logout",{withCredentials: true})
+      const res = await axios.get("http://localhost:8400/api/user/logout", {
+        withCredentials: true,
+      });
       console.log(res);
-      if(res.status === 200){
-        dispatch(setLogOut(null))
+      if (res.status === 200) {
+        dispatch(setLogOut(null));
         navigate("/");
-        toast.success("Logout Successfull!")
+        toast.success("Logout Successfull!");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.error)
+      toast.error(error.response?.data?.error);
     }
   };
 
@@ -48,7 +45,9 @@ const Header = () => {
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="ml-2 text-2xl font-bold text-sky-500">Job<span className='text-black'>Portal</span></span>
+            <span className="ml-2 text-2xl font-bold text-sky-500">
+              Job<span className="text-black">Portal</span>
+            </span>
           </Link>
         </div>
 
@@ -56,16 +55,48 @@ const Header = () => {
         <div className="flex items-center space-x-6">
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-600 hover:text-blue-600 font-medium">
-              Home
-            </Link>
-            <Link to="/jobs" className="text-gray-600 hover:text-blue-600 font-medium">
-              Jobs
-            </Link>
-            <Link to="/browse" className="text-gray-600 hover:text-blue-600 font-medium">
-              Browse
-            </Link>
-            <Link to="/about" className="text-gray-600 hover:text-blue-600 font-medium">
+            {user && user.role === "recruiter" ? (
+              <>
+                <Link
+                  to="/recruiter/companies"
+                  className="text-gray-600 hover:text-blue-600 font-medium"
+                >
+                  Companies
+                </Link>
+                <Link
+                  to="/recruiter/jobs"
+                  className="text-gray-600 hover:text-blue-600 font-medium"
+                >
+                  Jobs
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/"
+                  className="text-gray-600 hover:text-blue-600 font-medium"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/jobs"
+                  className="text-gray-600 hover:text-blue-600 font-medium"
+                >
+                  Jobs
+                </Link>
+                <Link
+                  to="/browse"
+                  className="text-gray-600 hover:text-blue-600 font-medium"
+                >
+                  Browse
+                </Link>
+              </>
+            )}
+
+            <Link
+              to="/about"
+              className="text-gray-600 hover:text-blue-600 font-medium"
+            >
               About
             </Link>
           </nav>
@@ -73,7 +104,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
-            variant="ghost"
+              variant="ghost"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-500 -mr-4"
             >
@@ -85,9 +116,15 @@ const Header = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.profile.profilePhoto} alt="ProfilePhoto"/>
+                    <AvatarImage
+                      src={user.profile.profilePhoto}
+                      alt="ProfilePhoto"
+                    />
                     {/* <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback> */}
                   </Avatar>
                 </Button>
@@ -97,34 +134,47 @@ const Header = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex flex-col items-start">
                   <span className="font-medium">{user?.name}</span>
-                  <span className="text-sm text-gray-500 truncate max-w-full">{user?.bio}</span>
+                  <span className="text-sm text-gray-500 truncate max-w-full">
+                    {user?.profile.bio}
+                  </span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className="w-full cursor-pointer">Profile</Link>
+                  <Link to="/profile" className="w-full cursor-pointer">
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                {
+                  (user && user?.role === 'jobseeker') && <>
+                  <DropdownMenuItem asChild>
+                  <Link to="/applications" className="w-full cursor-pointer">
+                    My Applications
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/applications" className="w-full cursor-pointer">My Applications</Link>
+                  <Link to="/saved-jobs" className="w-full cursor-pointer">
+                    Saved Jobs
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/saved-jobs" className="w-full cursor-pointer">Saved Jobs</Link>
-                </DropdownMenuItem>
+                  </>
+                }
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-600 cursor-pointer"
+                >
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className='flex items-center gap-2'>
-                <Link to="/login"><Button className="px-5 bg-black text-white">
-              Login
-            </Button></Link>
-            <Link to="/signup">
-            <Button className="px-5 bg-black text-white">
-              Signup
-            </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link to="/login">
+                <Button className="px-5 bg-black text-white">Login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button className="px-5 bg-black text-white">Signup</Button>
+              </Link>
             </div>
           )}
         </div>
@@ -133,16 +183,28 @@ const Header = () => {
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
         <div className="md:hidden px-4 py-2 bg-gray-50 border-t border-gray-200">
-          <Link to="/jobs" className="block py-2 text-gray-600 hover:text-blue-600 font-medium">
+          <Link
+            to="/jobs"
+            className="block py-2 text-gray-600 hover:text-blue-600 font-medium"
+          >
             Jobs
           </Link>
-          <Link to="/companies" className="block py-2 text-gray-600 hover:text-blue-600 font-medium">
+          <Link
+            to="/companies"
+            className="block py-2 text-gray-600 hover:text-blue-600 font-medium"
+          >
             Companies
           </Link>
-          <Link to="/resources" className="block py-2 text-gray-600 hover:text-blue-600 font-medium">
+          <Link
+            to="/resources"
+            className="block py-2 text-gray-600 hover:text-blue-600 font-medium"
+          >
             Resources
           </Link>
-          <Link to="/about" className="block py-2 text-gray-600 hover:text-blue-600 font-medium">
+          <Link
+            to="/about"
+            className="block py-2 text-gray-600 hover:text-blue-600 font-medium"
+          >
             About
           </Link>
         </div>

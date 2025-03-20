@@ -100,7 +100,52 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {
+              user?.role === "recruiter" ?<div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter your name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter your email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="profilePhoto"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Profile Photo</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          onChange={handleProfilePhotoChange}
+                          accept=".jpg,.png,.jpeg"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div> :<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <FormField
                   control={form.control}
@@ -241,6 +286,7 @@ const UpdateProfileDialog = ({ isOpen, setIsOpen }) => {
                 />
               </div>
             </div>
+            }
             <Button type="submit" className="w-full bg-black">
               Save Changes
             </Button>

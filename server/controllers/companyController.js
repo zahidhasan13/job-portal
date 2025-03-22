@@ -1,4 +1,6 @@
 const Company = require("../models/companySchema");
+const getDataUri = require("../utils/dataUri");
+const cloudinary = require("../utils/cloudinary");
 
 const registerCompany = async (req, res) => {
   try {
@@ -15,7 +17,9 @@ const registerCompany = async (req, res) => {
       name: companyName,
       createdBy: req.id,
     });
-    res.status(200).json(company);
+    res
+      .status(200)
+      .json({ message: "Company Create Successful!", success: true, company });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -52,6 +56,8 @@ const gestSingleCompany = async (req, res) => {
 const updateCompany = async (req, res) => {
   try {
     const companyId = req.params.id;
+    const companyLogoFile = req.files['companyLogo'] ? req.files['companyLogo'][0] : null;
+    console.log(companyLogoFile);
     const {
       name,
       description,
@@ -65,19 +71,34 @@ const updateCompany = async (req, res) => {
       country,
       zipCode,
       isHeadquarters,
+      linkedin,
+      twitter,
+      facebook,
+      instagram,
       contactEmail,
       contactPhone,
+      isVerified
     } = req.body;
-    const file = req.file;
 
+// Upload company logo to Cloudinary
+let companyLogos;
+    if (companyLogoFile) {
+      const companyLogoUri = getDataUri(companyLogoFile);
+      const companyLogoRes = await cloudinary.uploader.upload(companyLogoUri.content, {
+        folder: 'company-logo', // Optional: Organize files in Cloudinary
+      });
+      companyLogos = companyLogoRes.secure_url;
+    }
+    console.log(companyLogos);
     const update = {
       name,
       description,
+      logo: companyLogos,
       industry,
       companySize,
       foundedYear,
       website,
-      locations:{
+      locations: {
         address,
         city,
         state,
@@ -85,8 +106,15 @@ const updateCompany = async (req, res) => {
         zipCode,
         isHeadquarters,
       },
+      socialMedia: {
+        linkedin,
+        twitter,
+        facebook,
+        instagram,
+      },
       contactEmail,
       contactPhone,
+      isVerified
     };
 
     const company = await Company.findByIdAndUpdate(companyId, update, {
@@ -95,7 +123,13 @@ const updateCompany = async (req, res) => {
     if (!company) {
       throw new Error("Company not Found!");
     }
-    res.status(200).json(company);
+    res
+      .status(200)
+      .json({
+        company,
+        message: "Company Updated Successfully!",
+        success: true,
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

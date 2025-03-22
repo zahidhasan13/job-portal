@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,97 +20,50 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllCompanies } from '@/redux/slices/companySlice';
 
 const RecruiterCompanies = () => {
-  const [companies, setCompanies] = useState([
-    { id: 1, name: 'TechCorp', industry: 'Technology', openPositions: 5 },
-    { id: 2, name: 'FinanceHub', industry: 'Finance', openPositions: 3 },
-    { id: 3, name: 'MedicalPro', industry: 'Healthcare', openPositions: 7 },
-  ]);
-  const [open, setOpen] = useState(false);
-  const [newCompany, setNewCompany] = useState({
-    name: '',
-    industry: '',
-    openPositions: 0,
-  });
   const [searchQuery, setSearchQuery] = useState('');
+  const dispatch = useDispatch();
+  const { companies } = useSelector((state) => state.company);
 
-  // Handle adding a new company
-  const handleAddCompany = () => {
-    const id = companies.length > 0 ? Math.max(...companies.map((c) => c.id)) + 1 : 1;
-    setCompanies([...companies, { ...newCompany, id }]);
-    setNewCompany({ name: '', industry: '', openPositions: 0 });
-    setOpen(false);
-  };
+  useEffect(() => {
+    // Fetch companies
+    const getAllCompanies = async () => {
+      try {
+        const res = await axios.get("http://localhost:8400/api/company",{withCredentials:true});
+        if(res.status === 200){
+          dispatch(setAllCompanies(res.data))
+        }
+
+      } catch (error) {
+        console.error(error);
+        
+      }
+    };
+    getAllCompanies();
+  }, [dispatch]);
+
+ 
 
   // Filter companies based on search query
-  const filteredCompanies = companies.filter((company) =>
-    company.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredCompanies = companies?.filter((company) =>
+  //   company.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <div className="container mx-auto p-6 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Managed Companies</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button>
+        <Link to="/recruiter/companies/create-company">
+        <Button>
               <Plus className="mr-2 h-4 w-4" />
               Add Company
             </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Company</DialogTitle>
-              <DialogDescription>
-                Enter the details of the company you want to add to your list.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  value={newCompany.name}
-                  onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="industry" className="text-right">
-                  Industry
-                </Label>
-                <Input
-                  id="industry"
-                  value={newCompany.industry}
-                  onChange={(e) => setNewCompany({ ...newCompany, industry: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="positions" className="text-right">
-                  Open Positions
-                </Label>
-                <Input
-                  id="positions"
-                  type="number"
-                  value={newCompany.openPositions}
-                  onChange={(e) =>
-                    setNewCompany({ ...newCompany, openPositions: parseInt(e.target.value) || 0 })
-                  }
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit" onClick={handleAddCompany}>
-                Add Company
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        </Link>
       </div>
 
       {/* Search Input */}
@@ -135,18 +88,20 @@ const RecruiterCompanies = () => {
       </TableRow>
     </TableHeader>
     <TableBody>
-      {filteredCompanies.length > 0 ? (
-        filteredCompanies.map((company) => (
-          <TableRow key={company.id} className="border-b">
+      {companies?.length > 0 ? (
+        companies?.map((company) => (
+          <TableRow key={company._id} className="border-b">
             <TableCell className="text-left">{company.name}</TableCell>
             <TableCell className="text-left">{company.industry}</TableCell>
             <TableCell className="text-left">{company.openPositions}</TableCell>
             <TableCell className="flex space-x-2">
+              <Link to={`/recruiter/companies/company-details/${company._id}`}>
               <Button variant="outline" size="sm">
                 View Details
               </Button>
-              <Button variant="default" size="sm">
-                Manage
+              </Link>
+              <Button variant="destructive" size="sm">
+                Delete
               </Button>
             </TableCell>
           </TableRow>
@@ -163,7 +118,7 @@ const RecruiterCompanies = () => {
 </div>
 
       {/* Empty State */}
-      {companies.length === 0 && (
+      {companies?.length === 0 && (
         <div className="flex flex-col items-center justify-center p-12 text-center">
           <h3 className="mt-4 text-lg font-medium">No companies added yet</h3>
           <p className="mt-2 text-gray-500">

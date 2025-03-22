@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button'; // Shadcn UI Button
+import React, { useState } from 'react';// Shadcn UI Button
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'; // Shadcn UI Tabs
-import { User, Briefcase, Bookmark, FileText, Edit } from 'lucide-react'; // Icons
-import { Badge } from '@/components/ui/badge';
+import { User, Briefcase, Bookmark } from 'lucide-react'; // Icons
 import UserInfoTab from '@/components/UserInfoTab';
 import AppliedJobsTable from '@/components/AppliedJobsTable';
 import SavedJobsTable from '@/components/SavedJobsTable';
-import UpdateProfileDialog from '@/components/UpdateProfileDialog';
 import { useSelector } from 'react-redux';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('user-info');
-  const [isOpen, setIsOpen] = useState(false);
   const {user} = useSelector(state => state.auth);
 
  
@@ -42,7 +38,7 @@ const Profile = () => {
 
         {/* User Info Tab */}
         <TabsContent value="user-info" className="mt-6">
-          <UserInfoTab user={user} isOpen={isOpen} setIsOpen={setIsOpen}/>
+          <UserInfoTab/>
         </TabsContent>
 
         {/* Applied Jobs Tab */}
@@ -56,7 +52,6 @@ const Profile = () => {
         </TabsContent>
 
       </Tabs>
-      <UpdateProfileDialog isOpen={isOpen} setIsOpen={setIsOpen}/>
     </div>
   );
 };

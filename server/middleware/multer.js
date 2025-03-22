@@ -6,7 +6,9 @@ const uploadFiles = upload.fields([
   { name: 'profilePhoto', maxCount: 1 }, // For profile photo
   { name: 'resume', maxCount: 1 }, // For resume
 ]);
+const companyLogo = upload.single('companyLogo');
 
 module.exports = {
   uploadFiles,
+  companyLogo
 };

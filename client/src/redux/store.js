@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSlice from '@/redux/slices/authSlice';
 import jobSlice from '@/redux/slices/jobSlice';
+import companySlice from '@/redux/slices/companySlice';
 import {
     persistReducer,
     FLUSH,
@@ -16,6 +17,7 @@ import storage from 'redux-persist/lib/storage';
 const rootReducer = combineReducers({
     auth: authSlice,
     job: jobSlice,
+    company: companySlice,
 });
 
 // Persist configuration

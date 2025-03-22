@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button"; // Shadcn UI Button
 import { User, Edit, Code } from "lucide-react"; // Icons
 import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
+import { Link } from "react-router-dom";
 
-const UserInfoTab = ({ setIsOpen }) => {
+const UserInfoTab = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
@@ -34,18 +35,20 @@ const UserInfoTab = ({ setIsOpen }) => {
         </div>
 
         {/* Update Profile Button */}
+        <Link to="/profile/update">
         <Button
-          onClick={() => setIsOpen(true)}
           variant="outline"
           className="flex items-center gap-2"
         >
           <Edit className="w-4 h-4" />
           Update Profile
         </Button>
+        </Link>
       </div>
 
-      {/* Bio */}
-      {user?.profile?.bio && (
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+       {/* Bio */}
+       {user?.profile?.bio && (
         <div className="mt-4">
           <h3 className="text-lg font-semibold mb-2">Bio</h3>
           <p className="text-gray-700">{user.profile.bio}</p>
@@ -107,6 +110,7 @@ const UserInfoTab = ({ setIsOpen }) => {
           <p className="text-gray-700">{user.profile.company.name}</p>
         </div>
       )}
+     </div>
     </div>
   );
 };

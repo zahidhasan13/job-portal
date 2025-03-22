@@ -151,7 +151,7 @@ const RecruiterJobs = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Job Listings</h1>
         <Dialog open={open} onOpenChange={setOpen}>

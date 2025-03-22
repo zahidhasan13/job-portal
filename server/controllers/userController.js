@@ -75,13 +75,18 @@ const updateProfile = async (req, res) => {
     if (!user) {
       return res.status(401).json("User Not Found!");
     }
+    let skillsArray;
+    if(skills){
+      skillsArray = skills.split(",");
+      // skillsArray = skillsArray.map((skill) => skill.trim());
+    }
 
     // Update user fields
     if (name) user.name = name;
     if (email) user.email = email;
     if (phone) user.phone = phone;
     if (bio) user.profile.bio = bio;
-    if (skills) user.profile.skills = skills;
+    if (skills) user.profile.skills = skillsArray;
     if (description) user.profile.description = description;
     if (address) user.profile.address = address;
 

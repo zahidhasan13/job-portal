@@ -61,7 +61,7 @@ const UpdateCompanyForm = ({ isSubmitting }) => {
     defaultValues: {
       name: company?.name || "",
       description: company?.description || "",
-      logo: company?.logo || "",
+      logo: null,
       industry: company?.industry || "",
       companySize: company?.companySize || "",
       foundedYear: company?.foundedYear || "",
@@ -87,16 +87,17 @@ const UpdateCompanyForm = ({ isSubmitting }) => {
       const formData = new FormData();
 
        // Append non-file fields to FormData
-    Object.keys(data).forEach((key) => {
-      if (key !== "companyLogo" && data[key] !== null && data[key] !== undefined) {
-        formData.append(key, data[key]);
-      }
-    });
-
-    // Append the file (if it exists)
-    if (data.logo instanceof File) {
-      formData.append("companyLogo", data.logo); // Ensure the field name matches the backend expectation
-    }
+       Object.keys(data).forEach((key) => {
+        console.log(key==="logo","logo");
+        if (key === "logo") {
+          if (data[key]) {
+            formData.append(key, data[key]);
+          }
+        } else {
+          formData.append(key, data[key]);
+        }
+      });
+      console.log(formData);
 
       const res = await axios.patch(
         `http://localhost:8400/api/company/update/${company?._id}`,
@@ -112,7 +113,7 @@ console.log(res.data.company);
       if (res.status === 200) {
         toast.success("Company updated successfully");
         dispatch(setSingleCompany(res.data.company));
-        navigate(`/recruiter/companies/company-details/${company?._id}`);
+        navigate(`/recruiter/companies`);
       }
     } catch (error) {
       toast.error(error?.response?.data?.error || "An error occurred");
@@ -121,7 +122,7 @@ console.log(res.data.company);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
-    form.setValue("companyLogo", file);
+    form.setValue("logo", file);
   };
 
   return (
@@ -180,7 +181,7 @@ console.log(res.data.company);
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
-                    name="companyLogo"
+                    name="logo"
                     render={() => (
                       <FormItem>
                         <FormLabel>Company Logo</FormLabel>

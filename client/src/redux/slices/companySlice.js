@@ -14,8 +14,11 @@ const companySlice = createSlice({
         },
         setSingleCompany:(state, action)=>{
             state.singleCompany = action.payload
+        },
+        deleteCompany:(state, action)=>{
+            state.companies = state.companies.filter(company=>company._id !== action.payload)
         }
     }
 });
-export const {setAllCompanies,setSingleCompany} = companySlice.actions;
+export const {setAllCompanies,setSingleCompany, deleteCompany} = companySlice.actions;
 export default companySlice.reducer;

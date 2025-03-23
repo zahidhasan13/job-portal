@@ -28,7 +28,7 @@ const CreateCompany = () => {
         if(res.data.success){
             dispatch(setSingleCompany(res.data.company));
             toast.success(res.data.message);
-            navigate(`/recruiter/companies/company-details/${res.data.company._id}`);
+            navigate("/recruiter/companies/update-company");
         }
     } catch (error) {
         toast.error(error.response.data.error);

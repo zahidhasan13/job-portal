@@ -56,8 +56,7 @@ const gestSingleCompany = async (req, res) => {
 const updateCompany = async (req, res) => {
   try {
     const companyId = req.params.id;
-    const companyLogoFile = req.files['companyLogo'] ? req.files['companyLogo'][0] : null;
-    console.log(companyLogoFile);
+    const companyLogoFile = req.file;
     const {
       name,
       description,
@@ -77,19 +76,21 @@ const updateCompany = async (req, res) => {
       instagram,
       contactEmail,
       contactPhone,
-      isVerified
+      isVerified,
     } = req.body;
 
-// Upload company logo to Cloudinary
-let companyLogos;
+    // Upload company logo to Cloudinary
+    let companyLogos;
     if (companyLogoFile) {
       const companyLogoUri = getDataUri(companyLogoFile);
-      const companyLogoRes = await cloudinary.uploader.upload(companyLogoUri.content, {
-        folder: 'company-logo', // Optional: Organize files in Cloudinary
-      });
+      const companyLogoRes = await cloudinary.uploader.upload(
+        companyLogoUri.content,
+        {
+          folder: "logo", // Optional: Organize files in Cloudinary
+        }
+      );
       companyLogos = companyLogoRes.secure_url;
     }
-    console.log(companyLogos);
     const update = {
       name,
       description,
@@ -114,7 +115,7 @@ let companyLogos;
       },
       contactEmail,
       contactPhone,
-      isVerified
+      isVerified,
     };
 
     const company = await Company.findByIdAndUpdate(companyId, update, {
@@ -123,15 +124,35 @@ let companyLogos;
     if (!company) {
       throw new Error("Company not Found!");
     }
-    res
-      .status(200)
-      .json({
-        company,
-        message: "Company Updated Successfully!",
-        success: true,
-      });
+    res.status(200).json({
+      company,
+      message: "Company Updated Successfully!",
+      success: true,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+// Delete Company
+const deleteCompany = async (req, res) => {
+  const { id } = req.params; // Get the company ID from the request parameters
+
+  try {
+    // Check if the company exists
+    const company = await Company.findById(id);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company not found' });
+    }
+
+    // Delete the company
+    await Company.findByIdAndDelete(id);
+
+    // Send success response
+    res.status(200).json({ success: true, message: 'Company deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting company:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -140,4 +161,5 @@ module.exports = {
   getCompanies,
   gestSingleCompany,
   updateCompany,
+  deleteCompany
 };

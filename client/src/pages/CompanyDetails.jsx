@@ -111,9 +111,6 @@ const CompanyDetails = () => {
               {company?.industry}
             </CardDescription>
           </div>
-          <Badge variant="outline">
-            {company?.companySize || "Size unknown"}
-          </Badge>
           <Link to={"/recruiter/companies/update-company"}>
             <Button>
               <Edit className="mr-2 h-4 w-4" />

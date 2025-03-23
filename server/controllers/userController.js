@@ -68,6 +68,7 @@ const updateProfile = async (req, res) => {
   try {
     const { name, email, phone, bio, skills, description, address } = req.body;
     const profilePhotoFile = req.files['profilePhoto'] ? req.files['profilePhoto'][0] : null;
+    console.log(profilePhotoFile);
     const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
     const userId = req.id;
     let user = await User.findById(userId);

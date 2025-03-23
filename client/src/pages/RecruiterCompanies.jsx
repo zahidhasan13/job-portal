@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import Swal from 'sweetalert2';
 
 const RecruiterCompanies = () => {
   const { companies } = useSelector((state) => state.company);
@@ -43,14 +44,28 @@ const RecruiterCompanies = () => {
 
   // Delete Company
   const deleteHandler = async (id) => {
-    try {
-      const res = await axios.delete(`http://localhost:8400/api/company/delete/${id}`, { withCredentials: true });
-      if (res.status === 200) {
-        toast.success(res.data.message);
-        dispatch(deleteCompany(id));
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this company!',
+      icon: 'warning',
+      iconColor: '#E91923',
+      showCancelButton: true,
+      confirmButtonColor: '#E91923',
+      cancelButtonColor: '#000',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const res = await axios.delete(`http://localhost:8400/api/company/delete/${id}`, { withCredentials: true });
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          dispatch(deleteCompany(id));
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message);
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -88,7 +103,7 @@ const RecruiterCompanies = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCompanies?.length > 0 ? (
+            {filteredCompanies?.length > 0 && (
               filteredCompanies.map((company) => (
                 <TableRow key={company._id} className="border-b">
                   <TableCell className="text-left">{company.name}</TableCell>
@@ -110,13 +125,7 @@ const RecruiterCompanies = () => {
                   </TableCell>
                 </TableRow>
               ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center py-4">
-                  No companies found.
-                </TableCell>
-              </TableRow>
-            )}
+            ) }
           </TableBody>
         </Table>
       </div>

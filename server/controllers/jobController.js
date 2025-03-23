@@ -106,7 +106,10 @@ const getAdminJobs = async (req, res) => {
     if (!adminId) {
       throw new Error("Id invalid");
     }
-    const jobs = await Job.find({ postedBy: adminId });
+    const jobs = await Job.find({ postedBy: adminId }).populate({
+      path: "company",
+      createdAt: -1,
+    })
     if (!jobs) {
       throw new Error("Job not Found!");
     }

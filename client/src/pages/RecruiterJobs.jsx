@@ -28,6 +28,7 @@ import {
 import { useSelector } from "react-redux";
 import useGetAllRecruiterJobs from "@/hooks/useGetAllRecruiterJobs";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const RecruiterJobs = () => {
   useGetAllRecruiterJobs();
@@ -50,9 +51,7 @@ const RecruiterJobs = () => {
   }, [selectedCompany, jobs]);
 
   // Get unique company names for the filter dropdown
-  const uniqueCompanies = [
-    ...new Set(jobs?.map((job) => job.company.name)),
-  ];
+  const uniqueCompanies = [...new Set(jobs?.map((job) => job.company.name))];
 
   // Clear filters
   const clearFilters = () => {
@@ -63,10 +62,12 @@ const RecruiterJobs = () => {
     <div className="container mx-auto p-6 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Job Listings</h1>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Job
-        </Button>
+        <Link to="/recruiter/job/create">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Job
+          </Button>
+        </Link>
       </div>
 
       {/* Filters Section */}
@@ -112,7 +113,7 @@ const RecruiterJobs = () => {
               <TableHead>Company</TableHead>
               <TableHead>Posted Date</TableHead>
               <TableHead>Applicants</TableHead>
-              <TableHead className="w-[80px]"></TableHead>
+              <TableHead className="w-[80px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -122,9 +123,9 @@ const RecruiterJobs = () => {
                   <TableCell className="font-medium">{job.title}</TableCell>
                   <TableCell>{job.company.name}</TableCell>
                   <TableCell>
-                    {moment(job.createdAt).format("MMM Do YY")}
+                    {moment(job.createdAt).format("Do MMM YY")}
                   </TableCell>
-                  <TableCell>{job.applicationCount}</TableCell>
+                  <TableCell>{job.applications.length}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -135,8 +136,16 @@ const RecruiterJobs = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit job</DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to={`/job-details/${job._id}`}>
+                            View job
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/recruiter/job/create">
+                            Edit job
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-red-600">
                           Delete

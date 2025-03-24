@@ -6,7 +6,7 @@ const jobPost = async (req, res) => {
       title,
       companyId,
       location,
-      description,
+      responsibilities,
       requirements,
       employmentType,
       industry,
@@ -15,13 +15,12 @@ const jobPost = async (req, res) => {
       salaryMax,
       skills,
       applicationDeadline,
-      postedDate,
       contactEmail,
     } = req.body;
     if (
       !title ||
       !location ||
-      !description ||
+      !responsibilities ||
       !requirements ||
       !employmentType ||
       !industry ||
@@ -30,7 +29,6 @@ const jobPost = async (req, res) => {
       !salaryMax ||
       !skills ||
       !applicationDeadline ||
-      !postedDate ||
       !contactEmail
     ) {
       throw new Error("All fields are rquired!");
@@ -40,7 +38,7 @@ const jobPost = async (req, res) => {
       title,
       company: companyId,
       location,
-      description,
+      responsibilities,
       requirements,
       employmentType,
       industry,
@@ -52,7 +50,6 @@ const jobPost = async (req, res) => {
       skills,
       applicationDeadline,
       postedBy: req.id,
-      postedDate,
       contactEmail,
     });
     res.status(200).json(job);
@@ -118,9 +115,64 @@ const getAdminJobs = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+// Job Update
+const updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const {
+      title,
+      location,
+      responsibilities,
+      requirements,
+      employmentType,
+      industry,
+      experienceLevel,
+      salaryMin,
+      salaryMax,
+      skills,
+      applicationDeadline,
+      contactEmail,
+    } = req.body;
+
+    
+    const update = {
+      title,
+      location,
+      responsibilities,
+      requirements,
+      employmentType,
+      industry,
+      experienceLevel,
+      salary: {
+        min: salaryMin,
+        max: salaryMax,
+      },
+      skills,
+      applicationDeadline,
+      postedBy: req.id,
+      contactEmail,
+    };
+
+    const company = await Job.findByIdAndUpdate(jobId, update, {
+      new: true,
+    });
+    if (!company) {
+      throw new Error("Job not Found!");
+    }
+    res.status(200).json({
+      company,
+      message: "JOb Updated Successfully!",
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 module.exports = {
   jobPost,
   getAllJobs,
   getJobById,
   getAdminJobs,
+  updateJob
 };

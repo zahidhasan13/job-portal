@@ -1,9 +1,11 @@
 import AllJobs from '@/components/AllJobs';
 import JobFilter from '@/components/JobFilter';
+import useGetAllJobs from '@/hooks/useGetAllJobs';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const Jobs = () => {
+  useGetAllJobs()
   const { jobs } = useSelector((state) => state.job);
   const [filters, setFilters] = useState({
     location: '',

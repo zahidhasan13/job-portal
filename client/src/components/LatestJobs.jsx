@@ -1,8 +1,10 @@
 import React from "react";
 import JobCard from "./JobCard";
 import { useSelector } from "react-redux";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
 
 const LatestJobs = () => {
+  useGetAllJobs();
   const { jobs } = useSelector((state) => state.job);
 
   return (

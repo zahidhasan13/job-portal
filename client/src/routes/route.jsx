@@ -7,6 +7,7 @@ import CompanyDetails from "@/pages/CompanyDetails";
 import CreateCompany from "@/pages/CreateCompany";
 import Home from "@/pages/Home";
 import JobDetails from "@/pages/JobDetails";
+import JobPost from "@/pages/JobPost";
 import Jobs from "@/pages/Jobs";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
         {
           path:"/recruiter/jobs",
           element: <RecruiterJobs/>
+        },
+        {
+          path:"/recruiter/job/create",
+          element: <JobPost/>
         },
         {
           path:"/about",

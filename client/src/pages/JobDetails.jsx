@@ -9,6 +9,7 @@ import {
   BarChart,
   Mail,
   ArrowLeft,
+  Edit,
 } from "lucide-react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +46,7 @@ const JobDetails = () => {
           withCredentials: true,
         }
       );
-console.log(res);
+      console.log(res);
       if (res.status === 201) {
         toast.success("Successfully applied for the job.");
 
@@ -167,18 +168,31 @@ console.log(res);
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Button
-              onClick={isApplied ? null : appliedJob}
-              disabled={isApplied}
-              className="bg-black hover:bg-gray-800"
-            >
-              {isApplied ? "Applied" : "Apply Now"}
-            </Button>
-            <Button variant="outline" className="border-gray-300">
-              Save Job
-            </Button>
-          </div>
+          {user?.role === "recruiter" ? (
+            <div className="flex flex-col gap-2">
+              <Link to="/recruiter/job/create">
+              <Button
+                className="bg-black hover:bg-gray-800"
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                <span>Update Job</span>
+              </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={isApplied ? null : appliedJob}
+                disabled={isApplied}
+                className="bg-black hover:bg-gray-800"
+              >
+                {isApplied ? "Applied" : "Apply Now"}
+              </Button>
+              <Button variant="outline" className="border-gray-300">
+                Save Job
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Job Highlight Cards */}

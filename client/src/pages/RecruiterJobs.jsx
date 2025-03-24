@@ -25,14 +25,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useGetAllRecruiterJobs from "@/hooks/useGetAllRecruiterJobs";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { toast } from "sonner";
+import { deleteJob } from "@/redux/slices/jobSlice";
 
 const RecruiterJobs = () => {
   useGetAllRecruiterJobs();
   const { adminJobs: jobs } = useSelector((state) => state.job);
+  const dispatch = useDispatch();
 
   // State for filtering
   const [selectedCompany, setSelectedCompany] = useState("all-companies");
@@ -56,6 +61,32 @@ const RecruiterJobs = () => {
   // Clear filters
   const clearFilters = () => {
     setSelectedCompany("all-companies");
+  };
+
+  const deleteHandler = async (id) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this company!',
+      icon: 'warning',
+      iconColor: '#E91923',
+      showCancelButton: true,
+      confirmButtonColor: '#E91923',
+      cancelButtonColor: '#000',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const res = await axios.delete(`http://localhost:8400/api/job/delete/${id}`, { withCredentials: true });
+        if (res.status === 200) {
+          toast.success(res.data.message);
+          dispatch(deleteJob(id));
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message);
+      }
+    }
   };
 
   return (
@@ -148,7 +179,7 @@ const RecruiterJobs = () => {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-red-600">
-                          Delete
+                          <Button onClick={()=>deleteHandler(job._id)} variant="destructive">Delete</Button>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

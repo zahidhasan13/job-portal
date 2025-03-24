@@ -18,8 +18,11 @@ const jobSlice = createSlice({
         },
         setRecruiterJobs:(state, action)=>{
             state.adminJobs = action.payload
+        },
+        deleteJob:(state, action)=>{
+            state.adminJobs = state.adminJobs.filter(job=>job._id !== action.payload)
         }
     }
 });
-export const {setAllJobs,setSingleJob, setRecruiterJobs} = jobSlice.actions;
+export const {setAllJobs,setSingleJob, setRecruiterJobs,deleteJob} = jobSlice.actions;
 export default jobSlice.reducer;

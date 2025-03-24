@@ -154,19 +154,41 @@ const updateJob = async (req, res) => {
       contactEmail,
     };
 
-    const company = await Job.findByIdAndUpdate(jobId, update, {
+    const job = await Job.findByIdAndUpdate(jobId, update, {
       new: true,
     });
-    if (!company) {
+    if (!job) {
       throw new Error("Job not Found!");
     }
     res.status(200).json({
       company,
-      message: "JOb Updated Successfully!",
+      message: "Job Updated Successfully!",
       success: true,
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+// Delete job
+const deleteJob = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if the company exists
+    const job = await Job.findById(id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
+    }
+
+    // Delete the company
+    await Job.findByIdAndDelete(id);
+
+    // Send success response
+    res.status(200).json({ success: true, message: 'Job deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting company:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 module.exports = {
@@ -174,5 +196,6 @@ module.exports = {
   getAllJobs,
   getJobById,
   getAdminJobs,
-  updateJob
+  updateJob,
+  deleteJob
 };

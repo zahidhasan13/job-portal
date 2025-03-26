@@ -56,7 +56,7 @@ const RecruiterJobs = () => {
   }, [selectedCompany, jobs]);
 
   // Get unique company names for the filter dropdown
-  const uniqueCompanies = [...new Set(jobs?.map((job) => job.company.name))];
+  const uniqueCompanies = [...new Set(jobs?.map((job) => job?.company?.name))];
 
   // Clear filters
   const clearFilters = () => {
@@ -149,14 +149,14 @@ const RecruiterJobs = () => {
           </TableHeader>
           <TableBody>
             {filteredJobs?.length > 0 ? (
-              filteredJobs.map((job) => (
-                <TableRow key={job._id}>
-                  <TableCell className="font-medium">{job.title}</TableCell>
-                  <TableCell>{job.company.name}</TableCell>
+              filteredJobs?.map((job) => (
+                <TableRow key={job?._id}>
+                  <TableCell className="font-medium">{job?.title}</TableCell>
+                  <TableCell>{job?.company?.name}</TableCell>
                   <TableCell>
-                    {moment(job.createdAt).format("Do MMM YY")}
+                    {moment(job?.createdAt).format("Do MMM YY")}
                   </TableCell>
-                  <TableCell>{job.applications.length}</TableCell>
+                  <TableCell>{job?.applications?.length}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -173,8 +173,13 @@ const RecruiterJobs = () => {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Link to="/recruiter/job/create">
+                          <Link to="/recruiter/job/update">
                             Edit job
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to={`/recruiter/job/${job._id}/applicants`}>
+                            Applicants
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />

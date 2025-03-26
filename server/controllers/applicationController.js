@@ -101,6 +101,7 @@ const updateStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const applicationId = req.params.id;
+    console.log(applicationId);
     if (!status) {
       return res.status(404).json({ message: "Status is required!" });
     }

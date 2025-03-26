@@ -16,8 +16,6 @@ const jobSchema = new Schema(
     },
     location: {
       type: String,
-      required: true,
-      trim: true,
     },
     requirements: {
       type: String,
@@ -32,7 +30,6 @@ const jobSchema = new Schema(
     employmentType: {
       type: String,
       enum: ["Full-time", "Part-time", "Contract", "Temporary", "Internship", "Remote"],
-      required: true,
     },
     industry: {
       type: String,

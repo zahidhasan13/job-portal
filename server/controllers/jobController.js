@@ -1,60 +1,52 @@
+const Company = require("../models/companySchema");
 const Job = require("../models/jobSchema");
 
 const jobPost = async (req, res) => {
   try {
-    const {
-      title,
-      companyId,
-      location,
-      responsibilities,
-      requirements,
-      employmentType,
-      industry,
-      experienceLevel,
-      salaryMin,
-      salaryMax,
-      skills,
-      applicationDeadline,
-      contactEmail,
-    } = req.body;
-    if (
-      !title ||
-      !location ||
-      !responsibilities ||
-      !requirements ||
-      !employmentType ||
-      !industry ||
-      !experienceLevel ||
-      !salaryMin ||
-      !salaryMax ||
-      !skills ||
-      !applicationDeadline ||
-      !contactEmail
-    ) {
-      throw new Error("All fields are rquired!");
+    const { title, companyId, description, requirements, location, salary, employmentType, skills } = req.body;
+    console.log(companyId);
+    
+    // Validate required fields
+    if (!title || !companyId) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Title and company ID are required fields" 
+      });
     }
 
-    const job = await Job.create({
+    // Check if company exists
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({ 
+        success: false,
+        error: "Company not found" 
+      });
+    }
+
+    // Create job post
+    const newJob = await Job.create({
       title,
       company: companyId,
-      location,
-      responsibilities,
-      requirements,
-      employmentType,
-      industry,
-      experienceLevel,
-      salary: {
-        min: salaryMin,
-        max: salaryMax,
-      },
-      skills,
-      applicationDeadline,
-      postedBy: req.id,
-      contactEmail,
+      postedBy: req.user?.id || req.id, 
     });
-    res.status(200).json(job);
+
+    // Populate company details in the response
+    const populatedJob = await Job.findById(newJob._id)
+      .populate({
+        path: "company", // Only include necessary fields
+      })
+
+    res.status(201).json({
+      success: true,
+      message: "Job posted successfully",
+      populatedJob
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Job posting error:", error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message || "An error occurred while posting the job" 
+    });
   }
 };
 // search Jobs
@@ -86,7 +78,7 @@ const getJobById = async (req, res) => {
     const jobId = req.params.id;
     const job = await Job.findById(jobId).populate({
       path: "applications",
-      model: "Application"
+      model: "Application",
     });
     if (!job) {
       throw new Error("Job not Found!");
@@ -106,7 +98,7 @@ const getAdminJobs = async (req, res) => {
     const jobs = await Job.find({ postedBy: adminId }).populate({
       path: "company",
       createdAt: -1,
-    })
+    });
     if (!jobs) {
       throw new Error("Job not Found!");
     }
@@ -120,8 +112,10 @@ const getAdminJobs = async (req, res) => {
 const updateJob = async (req, res) => {
   try {
     const jobId = req.params.id;
+    console.log(jobId);
     const {
       title,
+      company,
       location,
       responsibilities,
       requirements,
@@ -135,9 +129,9 @@ const updateJob = async (req, res) => {
       contactEmail,
     } = req.body;
 
-    
     const update = {
       title,
+      company,
       location,
       responsibilities,
       requirements,
@@ -150,7 +144,6 @@ const updateJob = async (req, res) => {
       },
       skills,
       applicationDeadline,
-      postedBy: req.id,
       contactEmail,
     };
 
@@ -178,17 +171,19 @@ const deleteJob = async (req, res) => {
     // Check if the company exists
     const job = await Job.findById(id);
     if (!job) {
-      return res.status(404).json({ success: false, message: 'Job not found' });
+      return res.status(404).json({ success: false, message: "Job not found" });
     }
 
     // Delete the company
     await Job.findByIdAndDelete(id);
 
     // Send success response
-    res.status(200).json({ success: true, message: 'Job deleted successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Job deleted successfully" });
   } catch (error) {
-    console.error('Error deleting company:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error deleting company:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 module.exports = {
@@ -197,5 +192,5 @@ module.exports = {
   getJobById,
   getAdminJobs,
   updateJob,
-  deleteJob
+  deleteJob,
 };

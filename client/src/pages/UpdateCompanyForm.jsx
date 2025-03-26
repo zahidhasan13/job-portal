@@ -36,8 +36,9 @@ import axios from "axios";
 import { toast } from "sonner";
 import { setSingleCompany } from "@/redux/slices/companySlice";
 
-const UpdateCompanyForm = ({ isSubmitting }) => {
+const UpdateCompanyForm = () => {
   const { singleCompany:company } = useSelector((state) => state.company);
+  const [isLoading, setIsLoading] = useState(false);
   const [showSocialMedia, setShowSocialMedia] = useState(
     company?.socialMedia &&
       Object.values(company?.socialMedia).some((value) => value)
@@ -97,8 +98,8 @@ const UpdateCompanyForm = ({ isSubmitting }) => {
           formData.append(key, data[key]);
         }
       });
-      console.log(formData);
-
+      
+      setIsLoading(true);
       const res = await axios.patch(
         `http://localhost:8400/api/company/update/${company?._id}`,
         formData,
@@ -114,9 +115,11 @@ console.log(res.data.company);
         toast.success("Company updated successfully");
         dispatch(setSingleCompany(res.data.company));
         navigate(`/recruiter/companies`);
+        setIsLoading(false);
       }
     } catch (error) {
       toast.error(error?.response?.data?.error || "An error occurred");
+      setIsLoading(false);
     }
   };
 
@@ -552,8 +555,8 @@ console.log(res.data.company);
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save Changes"}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Saving..." : "Save Changes"}
               </Button>
             </CardFooter>
           </form>

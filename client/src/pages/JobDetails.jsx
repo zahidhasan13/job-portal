@@ -170,7 +170,7 @@ const JobDetails = () => {
 
           {user?.role === "recruiter" ? (
             <div className="flex flex-col gap-2">
-              <Link to="/recruiter/job/create">
+              <Link to="/recruiter/job/update">
               <Button
                 className="bg-black hover:bg-gray-800"
               >

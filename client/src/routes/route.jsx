@@ -2,6 +2,7 @@ import App from "@/App";
 import Login from "@/components/auth/Login";
 import Signup from "@/components/auth/Signup";
 import About from "@/pages/About";
+import Applicants from "@/pages/Applicants";
 import Browse from "@/pages/Browse";
 import CompanyDetails from "@/pages/CompanyDetails";
 import CreateCompany from "@/pages/CreateCompany";
@@ -14,6 +15,7 @@ import Profile from "@/pages/Profile";
 import RecruiterCompanies from "@/pages/RecruiterCompanies";
 import RecruiterJobs from "@/pages/RecruiterJobs";
 import UpdateCompanyForm from "@/pages/UpdateCompanyForm";
+import UpdateJobPost from "@/pages/UpdateJobPost";
 import UpdateProfileForm from "@/pages/UpdateProfileForm";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -63,6 +65,14 @@ const router = createBrowserRouter([
         {
           path:"/recruiter/job/create",
           element: <JobPost/>
+        },
+        {
+          path:"/recruiter/job/update",
+          element: <UpdateJobPost/>
+        },
+        {
+          path:"/recruiter/job/:id/applicants",
+          element: <Applicants/>
         },
         {
           path:"/about",

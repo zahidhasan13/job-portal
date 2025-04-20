@@ -96,9 +96,10 @@ const RecruiterCompanies = () => {
         <Table className="w-full">
           <TableHeader>
             <TableRow>
+              <TableHead className="w-1/4">Logo</TableHead>
               <TableHead className="w-1/4">Name</TableHead>
               <TableHead className="w-1/4">Industry</TableHead>
-              <TableHead className="w-1/4">Open Positions</TableHead>
+              <TableHead className="w-1/4">Website</TableHead>
               <TableHead className="w-1/4">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -106,9 +107,14 @@ const RecruiterCompanies = () => {
             {filteredCompanies?.length > 0 && (
               filteredCompanies.map((company) => (
                 <TableRow key={company._id} className="border-b">
+                  <TableCell className="text-left">
+                    <img src={company.logo} alt={company.name} className='h-10 w-10'/>
+                  </TableCell>
                   <TableCell className="text-left">{company.name}</TableCell>
                   <TableCell className="text-left">{company.industry}</TableCell>
-                  <TableCell className="text-left">{company.openPositions}</TableCell>
+                  <TableCell className="text-left">
+                    <a href={company.website} target='_blank' className='text-blue-500 hover:underline'>{company.website}</a>
+                  </TableCell>
                   <TableCell className="flex space-x-2">
                     <Link to={`/recruiter/companies/company-details/${company._id}`}>
                       <Button variant="outline" size="sm">

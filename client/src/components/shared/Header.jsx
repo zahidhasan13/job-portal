@@ -125,7 +125,7 @@ const Header = () => {
                       src={user.profile.profilePhoto}
                       alt="ProfilePhoto"
                     />
-                    {/* <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback> */}
+                    <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -144,20 +144,6 @@ const Header = () => {
                     Profile
                   </Link>
                 </DropdownMenuItem>
-                {
-                  (user && user?.role === 'jobseeker') && <>
-                  <DropdownMenuItem asChild>
-                  <Link to="/applications" className="w-full cursor-pointer">
-                    My Applications
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/saved-jobs" className="w-full cursor-pointer">
-                    Saved Jobs
-                  </Link>
-                </DropdownMenuItem>
-                  </>
-                }
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}

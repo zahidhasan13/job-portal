@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Briefcase } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "@/redux/slices/jobSlice";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/jobs?search=${encodeURIComponent(searchQuery)}`);
-    }
+    dispatch(setSearchedQuery(searchQuery))
+    navigate("/browse");
   };
 
   return (

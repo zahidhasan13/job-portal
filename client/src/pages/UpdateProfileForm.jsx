@@ -180,7 +180,9 @@ const UpdateProfileForm = () => {
               </FormItem>
             )}
           />
-
+{
+  user?.role === "jobseeker" && <div>
+    
           {/* Skills */}
           <FormField
             control={form.control}
@@ -253,6 +255,8 @@ const UpdateProfileForm = () => {
             )}
           />
 
+  </div>
+}
           {/* Submit Button */}
           <Button type="submit" className="w-full">
             Update Profile

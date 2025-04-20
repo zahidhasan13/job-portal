@@ -18,6 +18,8 @@ import UpdateCompanyForm from "@/pages/UpdateCompanyForm";
 import UpdateJobPost from "@/pages/UpdateJobPost";
 import UpdateProfileForm from "@/pages/UpdateProfileForm";
 import { createBrowserRouter } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
 
 
 
@@ -36,7 +38,7 @@ const router = createBrowserRouter([
         },
         {
           path:"/job-details/:id",
-          element: <JobDetails/>
+          element: <PrivateRoute><JobDetails/></PrivateRoute>
         },
         {
           path:"/browse",
@@ -44,35 +46,35 @@ const router = createBrowserRouter([
         },
         {
           path:"/recruiter/companies",
-          element: <RecruiterCompanies/>
+          element: <AdminRoute><RecruiterCompanies/></AdminRoute>
         },
         {
           path:"/recruiter/companies/company-details/:id",
-          element: <CompanyDetails/>
+          element: <AdminRoute><CompanyDetails/></AdminRoute>
         },
         {
           path:"/recruiter/companies/create-company",
-          element: <CreateCompany/>
+          element: <AdminRoute><CreateCompany/></AdminRoute>
         },
         {
           path:"/recruiter/companies/update-company",
-          element: <UpdateCompanyForm/>
+          element: <AdminRoute><UpdateCompanyForm/></AdminRoute>
         },
         {
           path:"/recruiter/jobs",
-          element: <RecruiterJobs/>
+          element: <AdminRoute><RecruiterJobs/></AdminRoute>
         },
         {
           path:"/recruiter/job/create",
-          element: <JobPost/>
+          element: <AdminRoute><JobPost/></AdminRoute>
         },
         {
           path:"/recruiter/job/update",
-          element: <UpdateJobPost/>
+          element: <AdminRoute><UpdateJobPost/></AdminRoute>
         },
         {
           path:"/recruiter/job/:id/applicants",
-          element: <Applicants/>
+          element: <AdminRoute><Applicants/></AdminRoute>
         },
         {
           path:"/about",
@@ -80,11 +82,11 @@ const router = createBrowserRouter([
         },
         {
           path:"/profile",
-          element: <Profile/>
+          element: <PrivateRoute><Profile/></PrivateRoute>
         },
         {
           path:"/profile/update",
-          element: <UpdateProfileForm/>
+          element: <PrivateRoute><UpdateProfileForm/></PrivateRoute>
         },
       ]
     },

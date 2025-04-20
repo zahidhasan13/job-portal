@@ -3,7 +3,6 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { User, Briefcase, Bookmark } from "lucide-react";
 import UserInfoTab from "@/components/UserInfoTab";
 import AppliedJobsTable from "@/components/AppliedJobsTable";
-import SavedJobsTable from "@/components/SavedJobsTable";
 import { useSelector } from "react-redux";
 import { Skeleton } from "@/components/ui/skeleton"; 
 
@@ -30,7 +29,7 @@ const Profile = () => {
         className="w-full"
       >
         {user?.role === "jobseeker" && (
-          <TabsList className="grid w-full max-w-2xl grid-cols-3">
+          <TabsList className="grid w-full max-w-2xl grid-cols-2 mx-auto">
             <TabsTrigger value="user-info">
               <User className="w-4 h-4 mr-2" />
               User Info
@@ -38,10 +37,6 @@ const Profile = () => {
             <TabsTrigger value="applied-jobs">
               <Briefcase className="w-4 h-4 mr-2" />
               Applied Jobs
-            </TabsTrigger>
-            <TabsTrigger value="saved-jobs">
-              <Bookmark className="w-4 h-4 mr-2" />
-              Saved Jobs
             </TabsTrigger>
           </TabsList>
         )}
@@ -54,10 +49,6 @@ const Profile = () => {
           
           <TabsContent value="applied-jobs">
             <AppliedJobsTable />
-          </TabsContent>
-          
-          <TabsContent value="saved-jobs">
-            <SavedJobsTable />
           </TabsContent>
         </div>
       </Tabs>

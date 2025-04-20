@@ -21,15 +21,21 @@ const jobSchema = new Schema(
       type: String,
       trim: true,
     },
-    responsibilities: [
+    responsibilities: 
       {
         type: String,
         trim: true,
       },
-    ],
     employmentType: {
       type: String,
-      enum: ["Full-time", "Part-time", "Contract", "Temporary", "Internship", "Remote"],
+      enum: [
+        "Full-time",
+        "Part-time",
+        "Contract",
+        "Temporary",
+        "Internship",
+        "Remote",
+      ],
     },
     industry: {
       type: String,
@@ -54,12 +60,10 @@ const jobSchema = new Schema(
         default: "USD",
       },
     },
-    skills: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
+    skills: {
+      type: String,
+      trim: true,
+    },
     applicationDeadline: {
       type: Date,
     },
@@ -81,11 +85,14 @@ const jobSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Application",
       },
-    ], 
+    ],
     contactEmail: {
       type: String,
-      trim: true, 
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please fill a valid email address"],
+      trim: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
     },
   },
   {

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -20,59 +20,71 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from '@/components/ui/radio-group';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import useSignup from '@/hooks/useSignup';
+} from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import useSignup from "@/hooks/useSignup";
+import { useSelector } from "react-redux";
 
 // Form validation schema
 const signupSchema = z.object({
-  name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-  phone: z.string().min(11,{ message: 'Phone number must be 11 number' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-  role: z.enum(['jobseeker', 'recruiter'], { 
-    required_error: 'Please select a role'
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  phone: z.string().min(11, { message: "Phone number must be 11 number" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+  role: z.enum(["jobseeker", "recruiter"], {
+    required_error: "Please select a role",
   }),
 });
 
 const Signup = () => {
-  const{signup, isError, isLoading}=useSignup()
+  const { signup, isError, isLoading } = useSignup();
   const [showPassword, setShowPassword] = useState(false);
-  
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
   // Initialize the form
   const form = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone:'',
-      password: '',
-      role: 'jobseeker',
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      role: "jobseeker",
     },
   });
 
   // Form submission handler
   const handleSubmit = async (data) => {
-    const{name,email,password,phone,role}=data;
-    await signup(name,email,password,phone,role);
+    const { name, email, password, phone, role } = data;
+    await signup(name, email, password, phone, role);
   };
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Create an account
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your information to create an account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -80,9 +92,9 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="John Doe" 
-                        {...field} 
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -90,7 +102,7 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="email"
@@ -98,10 +110,10 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="john.doe@example.com" 
-                        {...field} 
+                      <Input
+                        type="email"
+                        placeholder="john.doe@example.com"
+                        {...field}
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -116,10 +128,10 @@ const Signup = () => {
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="text" 
-                        placeholder="e.g. +880123548585" 
-                        {...field} 
+                      <Input
+                        type="text"
+                        placeholder="e.g. +880123548585"
+                        {...field}
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -127,7 +139,7 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -136,10 +148,10 @@ const Signup = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Input 
-                          type={showPassword ? "text" : "password"} 
-                          placeholder="••••••••" 
-                          {...field} 
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          {...field}
                           disabled={isLoading}
                         />
                         <Button
@@ -161,7 +173,7 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="role"
@@ -196,11 +208,11 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
-              
-              <Button 
+
+              <Button
                 type="submit"
                 variant="default"
-                className="w-full bg-black" 
+                className="w-full bg-black"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create account"}
@@ -208,15 +220,18 @@ const Signup = () => {
             </form>
           </Form>
         </CardContent>
-        {
-          isError && <p className="bg-rose-500/30 rounded-lg p-5 text-rose-500 border border-rose-500 mx-5">
-          {isError}
-        </p>
-        }
+        {isError && (
+          <p className="bg-rose-500/30 rounded-lg p-5 text-rose-500 border border-rose-500 mx-5">
+            {isError}
+          </p>
+        )}
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-black hover:underline font-medium">
+            <Link
+              to="/login"
+              className="text-black hover:underline font-medium"
+            >
               Sign in
             </Link>
           </p>

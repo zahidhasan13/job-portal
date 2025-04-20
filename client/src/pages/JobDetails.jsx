@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setSingleJob } from "@/redux/slices/jobSlice";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { toast } from "sonner";
 
@@ -23,6 +23,8 @@ const JobDetails = () => {
   const dispatch = useDispatch();
   const { singleJob } = useSelector((state) => state.job);
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
+  console.log(singleJob,"skills");
 
   // Check if the user has already applied for the job
   const [isApplied, setIsApplied] = useState(
@@ -46,7 +48,6 @@ const JobDetails = () => {
           withCredentials: true,
         }
       );
-      console.log(res);
       if (res.status === 201) {
         toast.success("Successfully applied for the job.");
 
@@ -111,13 +112,13 @@ const JobDetails = () => {
     <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md min-h-screen">
       {/* Back Button */}
       <div className="p-4 border-b">
-        <Link
-          to="/jobs"
-          className="flex items-center text-gray-600 hover:text-black"
+        <button
+          onClick={()=>navigate(-1)}
+          className="flex items-center text-gray-600 hover:text-black cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Job Listings
-        </Link>
+          <ArrowLeft className="w-6 h-6 mr-2" />
+          Back
+        </button>
       </div>
 
       <div className="p-8">
@@ -285,7 +286,7 @@ const JobDetails = () => {
             <div className="mb-8">
               <h2 className="text-xl font-semibold mb-4">Responsibilities</h2>
               <ul className="list-disc list-outside ml-5 text-gray-700 space-y-2">
-                {singleJob?.responsibilities.map((responsibility, index) => (
+                {singleJob?.responsibilities?.split(",")?.map((responsibility, index) => (
                   <li key={index}>{responsibility}</li>
                 ))}
               </ul>
@@ -297,7 +298,7 @@ const JobDetails = () => {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Skills</h2>
             <div className="flex flex-wrap gap-2">
-              {singleJob?.skills.map((skill, index) => (
+              {singleJob?.skills?.split(',').map((skill, index) => (
                 <Badge
                   key={index}
                   variant="secondary"
@@ -335,7 +336,8 @@ const JobDetails = () => {
         )}
 
         {/* Apply Button */}
-        <div className="mt-8 text-center">
+        {
+          user === 'jobseeker' && <div className="mt-8 text-center">
           <Button
             onClick={isApplied ? null : appliedJob}
             disabled={isApplied}
@@ -344,14 +346,15 @@ const JobDetails = () => {
             {isApplied ? "Applied" : "Apply for this position"}
           </Button>
         </div>
+        }
 
         {/* Company About */}
-        {singleJob?.company?.about && (
+        {singleJob?.company?.description && (
           <div className="mt-12 pt-8 border-t">
             <h2 className="text-xl font-semibold mb-4">
               About {singleJob.company.name}
             </h2>
-            <p className="text-gray-700">{singleJob.company.about}</p>
+            <p className="text-gray-700">{singleJob.company.description}</p>
           </div>
         )}
       </div>

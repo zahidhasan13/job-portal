@@ -56,17 +56,16 @@ const UpdateJobPost = () => {
       experienceLevel: singleJob?.experienceLevel || "",
       salaryMin: singleJob?.salary?.min || "",
       salaryMax: singleJob?.salary?.max || "",
-      skills: singleJob?.skills || [],
+      skills: singleJob?.skills || "",
       applicationDeadline: singleJob?.applicationDeadline
         ? new Date(singleJob.applicationDeadline)
         : null,
       contactEmail: singleJob?.contactEmail || "",
     },
   });
-  console.log(singleJob,"singleJob");
 
   const handleSubmit = async (data) => {
-    console.log(data);
+    console.log(data.skills,"post");
     try {
       const res = await axios.patch(`http://localhost:8400/api/job/${singleJob._id}`, data,{
         headers: {

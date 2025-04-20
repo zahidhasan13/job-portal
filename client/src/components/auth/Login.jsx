@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -20,55 +20,65 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from '@/components/ui/radio-group';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import useLogin from '@/hooks/useLogin';
+} from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import useLogin from "@/hooks/useLogin";
+import { useSelector } from "react-redux";
 
 // Form validation schema
 const signinSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
-  password: z.string().min(1, { message: 'Password is required' }),
-  role: z.enum(['jobseeker', 'recruiter'], { 
-    required_error: 'Please select a role'
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
+  role: z.enum(["jobseeker", "recruiter"], {
+    required_error: "Please select a role",
   }),
 });
 
 const Login = () => {
-  const{login, isError, isLoading}=useLogin()
+  const { login, isError, isLoading } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
-  
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
   // Initialize the form
   const form = useForm({
     resolver: zodResolver(signinSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      role: 'jobseeker',
+      email: "",
+      password: "",
+      role: "jobseeker",
     },
   });
 
   // Form submission handler
   const handleSubmit = async (data) => {
-    const{email,password,role}=data;
-    await login(email,password,role);
+    const { email, password, role } = data;
+    await login(email, password, role);
   };
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Sign in
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
+            >
               <FormField
                 control={form.control}
                 name="email"
@@ -76,10 +86,10 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="email" 
-                        placeholder="john.doe@example.com" 
-                        {...field} 
+                      <Input
+                        type="email"
+                        placeholder="john.doe@example.com"
+                        {...field}
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -87,7 +97,7 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="password"
@@ -96,10 +106,10 @@ const Login = () => {
                     <FormLabel>Password</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Input 
-                          type={showPassword ? "text" : "password"} 
-                          placeholder="••••••••" 
-                          {...field} 
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          {...field}
                           disabled={isLoading}
                         />
                         <Button
@@ -121,7 +131,7 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="role"
@@ -156,16 +166,19 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              
+
               <div className="flex justify-end">
-                <Link to="/forgot-password" className="text-sm text-black hover:underline">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-black hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full bg-black" 
+
+              <Button
+                type="submit"
+                className="w-full bg-black"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing in..." : "Sign in"}
@@ -173,15 +186,18 @@ const Login = () => {
             </form>
           </Form>
         </CardContent>
-        {
-          isError && <p className="bg-rose-500/30 rounded-lg p-5 text-rose-500 border border-rose-500 mx-5">
-          {isError}
-        </p>
-        }
+        {isError && (
+          <p className="bg-rose-500/30 rounded-lg p-5 text-rose-500 border border-rose-500 mx-5">
+            {isError}
+          </p>
+        )}
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-gray-600 text-center">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-black hover:underline font-medium">
+            <Link
+              to="/signup"
+              className="text-black hover:underline font-medium"
+            >
               Create account
             </Link>
           </div>
